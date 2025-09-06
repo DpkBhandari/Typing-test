@@ -14,7 +14,7 @@ export default function RegisterPage() {
 
   // Password regex same as backend Joi
   const passwordRegex =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,18}$/;
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{6,18}$/;
 
   async function handleRegister(e) {
     e.preventDefault();
@@ -27,7 +27,7 @@ export default function RegisterPage() {
 
     if (!passwordRegex.test(password)) {
       toast.error(
-        "Password must contain uppercase, lowercase, number, special character and 8-18 chars ❌"
+        "Password must contain uppercase, lowercase, number, special character and 6-18 chars ❌"
       );
       return;
     }
