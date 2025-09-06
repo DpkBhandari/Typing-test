@@ -4,15 +4,31 @@ import { toast } from "react-toastify";
 import axios from "axios";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  // Email Validation
+  function isValidEmail(value) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  }
+
+  // Phone Validation (10 digit)
+  function isValidPhone(value) {
+    return /^[0-9]{10}$/.test(value);
+  }
 
   async function handleLogin(e) {
     e.preventDefault();
 
-    if (!email || !password) {
+    if (!identifier || !password) {
       toast.error("Please fill all fields ❌");
+      return;
+    }
+
+    if (!isValidEmail(identifier) && !isValidPhone(identifier)) {
+      toast.error("Enter valid email or 10-digit phone number ❌");
       return;
     }
 
@@ -22,23 +38,24 @@ export default function LoginPage() {
     }
 
     try {
+      setLoading(true);
       const res = await axios.post(
         "http://localhost:5000/api/v1/login",
-        { email, password },
-        { withCredentials: true } // only needed if backend sets cookies
+        { identifier: identifier.trim(), password },
+        { withCredentials: true }
       );
+      setLoading(false);
 
       if (res.status === 200) {
         toast.success(`Welcome ${res.data.name}! 🎉`);
-
-        // Optionally save token for authenticated routes
         localStorage.setItem("token", res.data.token);
 
         // Clear form
-        setEmail("");
+        setIdentifier("");
         setPassword("");
       }
     } catch (err) {
+      setLoading(false);
       console.error(err);
       toast.error(err.response?.data?.message || "Something went wrong ❌");
     }
@@ -47,19 +64,19 @@ export default function LoginPage() {
   return (
     <form
       onSubmit={handleLogin}
-      className="flex items-center h-screen w-auto justify-center "
+      className="flex items-center h-screen w-auto justify-center"
     >
       <div className="h-auto w-140 flex flex-col items-center justify-center p-6 m-4 gap-8 text-xl">
         <h1 className="text-3xl font-semibold">Login Now</h1>
 
-        {/* Email */}
-        <label htmlFor="email" className="text-xl font-normal w-full">
-          Business Mail <sup className="text-red-600 text-xl">*</sup>
+        {/* Email / Phone */}
+        <label htmlFor="identifier" className="text-xl font-normal w-full">
+          Email / Phone <sup className="text-red-600 text-xl">*</sup>
           <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="name@work-email.com"
+            type="text"
+            value={identifier}
+            onChange={(e) => setIdentifier(e.target.value)}
+            placeholder="Enter email or phone number"
             className="border w-full rounded-sm p-4 placeholder:text-sm border-gray-400 outline-none mt-2 focus:border-blue-600"
           />
         </label>
@@ -95,12 +112,13 @@ export default function LoginPage() {
           </div>
         </div>
 
-        {/* Button */}
+        {/* Submit Button */}
         <button
           type="submit"
-          className="w-full bg-blue-600 h-16 text-white rounded-md hover:bg-blue-800 text-center"
+          disabled={loading}
+          className="w-full bg-blue-600 h-16 text-white rounded-md hover:bg-blue-800 text-center disabled:opacity-50"
         >
-          Login
+          {loading ? "Logging in..." : "Login"}
         </button>
       </div>
     </form>

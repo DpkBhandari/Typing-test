@@ -20,9 +20,9 @@ export async function userRegister(req, res, next) {
 
     const { fullName, email, password, phone } = value;
 
-    const isExist = await User.findOne({ $or: [{ email }, { phone }] });
+    const user = await User.findOne({ $or: [{ email }, { phone }] });
 
-    if (isExist) {
+    if (user) {
       return res
         .status(400)
         .json({ status: 400, message: "Email or phone already exists" });
@@ -54,7 +54,7 @@ export async function userRegister(req, res, next) {
   }
 }
 
-// Login Controller
+// User Login
 export async function userLogin(req, res, next) {
   try {
     const { error, value } = userLoginSchema.validate(req.body);
@@ -64,9 +64,12 @@ export async function userLogin(req, res, next) {
         .json({ status: 400, message: error.details[0].message });
     }
 
-    const { email, password } = value;
+    const { identifier, password } = value;
+    const id = identifier.trim();
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne(
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(id) ? { email: id } : { phone: id }
+    );
 
     if (!user) {
       return res
@@ -83,7 +86,7 @@ export async function userLogin(req, res, next) {
     }
 
     const token = jwt.sign(
-      { id: user._id, role: user.role, email: user.email },
+      { id: user._id, role: user.role, email: user.email, phone: user.phone },
       secret,
       { expiresIn: "1h" }
     );
@@ -93,6 +96,7 @@ export async function userLogin(req, res, next) {
       name: user.fullName,
       message: "Login successful",
       email: user.email,
+      phone: user.phone || null,
       token,
     });
   } catch (err) {

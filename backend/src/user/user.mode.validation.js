@@ -38,13 +38,19 @@ const userRegisterSchema = Joi.object({
 
 // Login Validation Schema
 const userLoginSchema = Joi.object({
-  email: Joi.string()
-    .email({
-      minDomainSegments: 2,
-      tlds: { allow: ["com", "net", "org", "in"] },
-    })
-    .required(),
-
+  identifier: Joi.string()
+    .trim()
+    .required()
+    .custom((value, helpers) => {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const phoneRegex = /^[0-9]{10}$/;
+      if (emailRegex.test(value) || phoneRegex.test(value)) {
+        return value;
+      }
+      return helpers.message(
+        "Identifier must be a valid email or a 10-digit phone number"
+      );
+    }),
   password: Joi.string().min(6).max(64).required(),
 });
 
