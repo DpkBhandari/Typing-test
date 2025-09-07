@@ -28,9 +28,16 @@ export default function App() {
         {/* Toast container should be outside of Routes */}
         <ToastContainer
           position="top-right"
-          autoClose={3000}
+          autoClose={5000}
           newestOnTop={true}
           pauseOnHover
+          toastStyle={{
+            backgroundColor: "#333",
+            color: "#fff",
+            fontWeight: "bold",
+            borderRadius: "10px",
+          }}
+          bodyStyle={{ fontSize: "16px" }}
         />
       </div>
     </>
