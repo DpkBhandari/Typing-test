@@ -1,4 +1,4 @@
-import express, { urlencoded } from "express";
+import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
 import cors from "cors";
@@ -6,7 +6,10 @@ import cors from "cors";
 import userRoutes from "./user/user.routes.js";
 import globalErrorHandler from "./middlewares.js/globalErrorHandler.js";
 
+import { globalLimiter } from "./middlewares.js/limiter.middleware.js";
+
 const app = express();
+app.use(globalLimiter);
 
 app.use(helmet());
 app.use(morgan("dev"));

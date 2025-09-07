@@ -28,7 +28,7 @@ export default function LoginPage() {
     }
 
     if (!isValidEmail(identifier) && !isValidPhone(identifier)) {
-      toast.error("Enter valid email or 10-digit phone number ❌");
+      toast.error("Enter valid email or phone number ❌");
       return;
     }
 
@@ -39,25 +39,35 @@ export default function LoginPage() {
 
     try {
       setLoading(true);
+
       const res = await axios.post(
         "http://localhost:5000/api/v1/login",
         { identifier: identifier.trim(), password },
         { withCredentials: true }
       );
+
       setLoading(false);
 
-      if (res.status === 200) {
-        toast.success(`Welcome ${res.data.name}! 🎉`);
-        localStorage.setItem("token", res.data.token);
+      toast.success(`Welcome ${res.data.name}! 🎉`);
+      localStorage.setItem("token", res.data.token);
 
-        // Clear form
-        setIdentifier("");
-        setPassword("");
-      }
+      // Clear form
+      setIdentifier("");
+      setPassword("");
     } catch (err) {
       setLoading(false);
-      console.error(err);
-      toast.error(err.response?.data?.message || "Something went wrong ❌");
+
+      if (err.response) {
+        // Server responded (including 429 rate limit)
+        toast.error(
+          err.response.data?.message || `Error: ${err.response.status}`
+        );
+      } else if (err.request) {
+        // Request made but no response
+        toast.error("Too many requests. Please try again later ❌");
+      } else {
+        toast.error("Something went wrong ❌");
+      }
     }
   }
 
@@ -112,11 +122,15 @@ export default function LoginPage() {
           </div>
         </div>
 
-        {/* Submit Button */}
+        {/* Login Button */}
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-blue-600 h-16 text-white rounded-md hover:bg-blue-800 text-center disabled:opacity-50"
+          className={`w-full h-16 text-white rounded-md text-center ${
+            loading
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-blue-600 hover:bg-blue-800"
+          }`}
         >
           {loading ? "Logging in..." : "Login"}
         </button>
