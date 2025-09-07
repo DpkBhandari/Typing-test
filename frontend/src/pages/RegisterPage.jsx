@@ -12,14 +12,12 @@ export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  // Password regex same as backend Joi
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{6,18}$/;
 
   async function handleRegister(e) {
     e.preventDefault();
 
-    // Basic field validation
     if (!fullName || !email || !password || !confirmPassword || !phone) {
       toast.error("Please fill all fields ❌");
       return;
@@ -51,8 +49,6 @@ export default function RegisterPage() {
 
       if (res.status === 201) {
         toast.success("Account created successfully! 🎉");
-
-        // Clear form
         setFullName("");
         setEmail("");
         setPassword("");
@@ -68,55 +64,61 @@ export default function RegisterPage() {
   return (
     <form
       onSubmit={handleRegister}
-      className="flex items-center h-screen w-auto justify-center"
+      className="flex items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8"
     >
-      <div className="h-auto w-140 flex flex-col items-center justify-center p-6 m-4 gap-8 text-xl">
-        <h1 className="text-3xl font-semibold">Start for free</h1>
-        <p className="text-2xl font-medium text-gray-500">
+      <div className="w-full max-w-lg bg-white flex flex-col items-center justify-center rounded-lg shadow-lg p-6 sm:p-8 m-4 gap-6">
+        <h1 className="text-2xl sm:text-3xl font-semibold">Start for free</h1>
+        <p className="text-base sm:text-xl font-medium text-gray-500 text-center">
           No credit card required
         </p>
 
         {/* Full Name */}
-        <label htmlFor="name" className="text-xl font-normal w-full">
-          Full Name <sup className="text-red-600 text-xl">*</sup>
+        <label
+          htmlFor="name"
+          className="text-base sm:text-lg font-normal w-full"
+        >
+          Full Name <sup className="text-red-600">*</sup>
           <input
             type="text"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
             placeholder="Enter your full name"
-            className="border w-full rounded-sm p-4 placeholder:text-sm border-gray-400 outline-none mt-2 focus:border-red-600"
+            className="border w-full rounded-md p-3 sm:p-4 placeholder:text-sm border-gray-400 outline-none mt-2 focus:border-red-600"
           />
         </label>
 
         {/* Email */}
-        <label htmlFor="email" className="text-xl font-normal w-full">
-          Business Mail <sup className="text-red-600 text-xl">*</sup>
+        <label
+          htmlFor="email"
+          className="text-base sm:text-lg font-normal w-full"
+        >
+          Business Mail <sup className="text-red-600">*</sup>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="name@work-email.com"
-            className="border w-full rounded-sm p-4 placeholder:text-sm border-gray-400 outline-none mt-2 focus:border-red-600"
+            className="border w-full rounded-md p-3 sm:p-4 placeholder:text-sm border-gray-400 outline-none mt-2 focus:border-red-600"
           />
         </label>
 
         {/* Password */}
         <label
           htmlFor="password"
-          className="text-xl font-normal w-full relative"
+          className="text-base sm:text-lg font-normal w-full relative"
         >
-          Password <sup className="text-red-600 text-xl">*</sup>
+          Password <sup className="text-red-600">*</sup>
           <input
             type={showPassword ? "text" : "password"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="8-18 chars with uppercase, lowercase, number, special char"
-            className="border w-full rounded-sm p-4 placeholder:text-sm border-gray-400 outline-none mt-2 focus:border-red-600 pr-10"
+            className="border w-full rounded-md p-3 sm:p-4 placeholder:text-sm border-gray-400 outline-none mt-2 focus:border-red-600 pr-10"
           />
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute text-xl right-10 top-[50%] transform -translate-y-1/2 text-gray-600 hover:text-black"
+            className="absolute text-lg sm:text-xl right-3 top-1/2 bottom-1/2  transform -translate-y-1/2 text-gray-600 hover:text-black"
           >
             {showPassword ? <FaEyeSlash /> : <FaEye />}
           </button>
@@ -125,41 +127,44 @@ export default function RegisterPage() {
         {/* Confirm Password */}
         <label
           htmlFor="confirmPassword"
-          className="text-xl font-normal w-full relative"
+          className="text-base sm:text-lg font-normal w-full relative"
         >
-          Confirm Password <sup className="text-red-600 text-xl">*</sup>
+          Confirm Password <sup className="text-red-600">*</sup>
           <input
             type={showConfirmPassword ? "text" : "password"}
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             placeholder="Re-enter password"
-            className="border w-full rounded-sm p-4 placeholder:text-sm border-gray-400 outline-none mt-2 focus:border-red-600 pr-10"
+            className="border w-full rounded-md p-3 sm:p-4 placeholder:text-sm border-gray-400 outline-none mt-2 focus:border-red-600 pr-10"
           />
           <button
             type="button"
             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-            className="absolute text-xl right-10 top-[50%] transform -translate-y-1/2 text-gray-600 hover:text-black"
+            className="absolute text-lg sm:text-xl right-3 top-1/2 bottom-1/2 transform -translate-y-1/2 text-gray-600 hover:text-black"
           >
             {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
           </button>
         </label>
 
         {/* Phone */}
-        <label htmlFor="phone" className="text-xl font-normal w-full">
-          Mobile phone number <sup className="text-red-600 text-xl">*</sup>
+        <label
+          htmlFor="phone"
+          className="text-base sm:text-lg font-normal w-full"
+        >
+          Mobile phone number <sup className="text-red-600">*</sup>
           <input
             type="tel"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             placeholder="8082309239"
-            className="border w-full rounded-sm p-4 placeholder:text-sm border-gray-400 outline-none mt-2 focus:border-red-600"
+            className="border w-full rounded-md p-3 sm:p-4 placeholder:text-sm border-gray-400 outline-none mt-2 focus:border-red-600"
           />
         </label>
 
         {/* Submit */}
         <button
           type="submit"
-          className="w-full bg-red-600 h-16 text-white rounded-md hover:bg-red-800 text-center"
+          className="w-full bg-red-600 h-12 sm:h-14 text-white rounded-md hover:bg-red-800 text-lg sm:text-xl"
         >
           Sign up
         </button>

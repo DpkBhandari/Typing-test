@@ -58,12 +58,10 @@ export default function LoginPage() {
       setLoading(false);
 
       if (err.response) {
-        // Server responded (including 429 rate limit)
         toast.error(
           err.response.data?.message || `Error: ${err.response.status}`
         );
       } else if (err.request) {
-        // Request made but no response
         toast.error("Too many requests. Please try again later ❌");
       } else {
         toast.error("Something went wrong ❌");
@@ -74,28 +72,34 @@ export default function LoginPage() {
   return (
     <form
       onSubmit={handleLogin}
-      className="flex items-center h-screen w-auto justify-center"
+      className="flex items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8"
     >
-      <div className="h-auto w-140 flex flex-col items-center justify-center p-6 m-4 gap-8 text-xl">
-        <h1 className="text-3xl font-semibold">Login Now</h1>
+      <div className="w-full max-w-md flex flex-col items-center justify-center bg-white p-6 sm:p-8 rounded-lg shadow-lg gap-6">
+        <h1 className="text-2xl sm:text-3xl font-semibold">Login Now</h1>
 
         {/* Email / Phone */}
-        <label htmlFor="identifier" className="text-xl font-normal w-full">
-          Email / Phone <sup className="text-red-600 text-xl">*</sup>
+        <label
+          htmlFor="identifier"
+          className="text-base sm:text-lg font-normal w-full"
+        >
+          Email / Phone <sup className="text-red-600">*</sup>
           <input
             type="text"
             value={identifier}
             onChange={(e) => setIdentifier(e.target.value)}
             placeholder="Enter email or phone number"
-            className="border w-full rounded-sm p-4 placeholder:text-sm border-gray-400 outline-none mt-2 focus:border-blue-600"
+            className="border w-full rounded-md p-3 sm:p-4 placeholder:text-sm border-gray-400 outline-none mt-2 focus:border-blue-600"
           />
         </label>
 
         {/* Password */}
         <div className="w-full">
           <div className="flex items-center justify-between">
-            <label htmlFor="password" className="text-xl font-normal">
-              Password <sup className="text-red-600 text-xl">*</sup>
+            <label
+              htmlFor="password"
+              className="text-base sm:text-lg font-normal"
+            >
+              Password <sup className="text-red-600">*</sup>
             </label>
             <a href="#" className="text-sm text-blue-500 hover:underline">
               Forgot password?
@@ -110,12 +114,12 @@ export default function LoginPage() {
               name="password"
               id="password"
               placeholder="Enter your password"
-              className="border w-full rounded-sm p-4 placeholder:text-sm border-gray-400 outline-none focus:border-blue-600 pr-10"
+              className="border w-full rounded-md p-3 sm:p-4 placeholder:text-sm border-gray-400 outline-none focus:border-blue-600 pr-10"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute text-xl right-3 top-1/2 transform -translate-y-1/2 text-gray-600 hover:text-black"
+              className="absolute text-lg sm:text-xl right-3 top-1/2 transform -translate-y-1/2 text-gray-600 hover:text-black"
             >
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
@@ -126,7 +130,7 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={loading}
-          className={`w-full h-16 text-white rounded-md text-center ${
+          className={`w-full h-12 sm:h-14 text-white rounded-md text-center text-lg sm:text-xl ${
             loading
               ? "bg-gray-400 cursor-not-allowed"
               : "bg-blue-600 hover:bg-blue-800"

@@ -61,7 +61,6 @@ export default function App() {
 
     let inputValue = e.target.value;
 
-    // Ignore multiple spaces at start
     if (inputValue === " ") {
       setInput("");
       return;
@@ -73,7 +72,6 @@ export default function App() {
       const typed = inputValue.trim();
       const status = typed === words[currentIndex] ? "correct" : "incorrect";
 
-      // Only count if user typed something
       if (typed.length > 0) {
         setTypedWords((prev) => [
           ...prev,
@@ -98,7 +96,7 @@ export default function App() {
     setStartTime(null);
   };
 
-  // Stats calculation based on actual typing time
+  // Stats calculation
   const elapsedMinutes =
     startTime && typedWords.length > 0
       ? Math.max((Date.now() - startTime) / 60000, 0.01)
@@ -117,11 +115,11 @@ export default function App() {
       ? Math.round((correctWords / typedWords.length) * 100)
       : 100;
 
-  // Render characters with colored overlay
+  // Render characters
   const renderCharacters = useCallback(
     (word, index) => {
       return word.split("").map((char, charIdx) => {
-        let colorClass = "text-gray-400"; // untyped
+        let colorClass = "text-gray-400";
         if (index < currentIndex) {
           colorClass =
             typedWords[index]?.status === "correct"
@@ -134,7 +132,7 @@ export default function App() {
           }
         }
         return (
-          <span key={charIdx} className={`${colorClass} text-2xl`}>
+          <span key={charIdx} className={`${colorClass} text-4xl`}>
             {char}
           </span>
         );
@@ -155,35 +153,40 @@ export default function App() {
 
         {/* Stats Section */}
         <div className="flex flex-col sm:flex-row items-center justify-center sm:gap-12 lg:gap-20 mb-10 w-full">
+          {/* Timer */}
           <div className="flex flex-col items-center p-4">
             <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full border-4 border-yellow-400 flex flex-col items-center justify-center text-gray-800">
               <span className="text-3xl font-bold">{seconds}</span>
               <span className="text-xs text-gray-600">seconds</span>
             </div>
           </div>
-          <div className="flex flex-col items-center p-4">
-            <span className="text-3xl font-bold">{wpm}</span>
-            <p className="text-gray-500 text-sm">words/min</p>
-          </div>
-          <div className="flex flex-col items-center p-4">
-            <span className="text-3xl font-bold">{charsPerMinute}</span>
-            <p className="text-gray-500 text-sm">chars/min</p>
-          </div>
-          <div className="flex flex-col items-center p-4">
-            <span className="text-3xl font-bold">{accuracy}%</span>
-            <p className="text-gray-500 text-sm">accuracy</p>
+
+          {/* WPM + CPM + Accuracy (inline on small & large screens) */}
+          <div className="flex flex-row items-center justify-center gap-6 sm:gap-12">
+            <div className="flex flex-col items-center p-2">
+              <span className="text-3xl font-bold">{wpm}</span>
+              <p className="text-gray-500 text-sm">words/min</p>
+            </div>
+            <div className="flex flex-col items-center p-2">
+              <span className="text-3xl font-bold">{charsPerMinute}</span>
+              <p className="text-gray-500 text-sm">chars/min</p>
+            </div>
+            <div className="flex flex-col items-center p-2">
+              <span className="text-3xl font-bold">{accuracy}%</span>
+              <p className="text-gray-500 text-sm">accuracy</p>
+            </div>
           </div>
         </div>
 
         {/* Typing Box */}
-        <div className="w-full max-w-4xl bg-white shadow-xl rounded-xl p-6 text-2xl relative overflow-hidden flex flex-col items-center justify-center">
+        <div className="w-full max-w-4xl bg-white shadow-xl rounded-xl p-6 text-2xl relative overflow-hidden flex  items-center justify-center">
           {!testStarted && (
-            <div className="absolute top-2 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-black text-base font-semibold px-6 py-2 rounded shadow-md select-none z-20">
+            <div className="absolute top-2 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-black text-base font-semibold px-6 py-2 rounded shadow-md select-none z-20 animate-bounce">
               Start typing
             </div>
           )}
           {testFinished && (
-            <div className="absolute top-2 left-1/2 transform -translate-x-1/2 bg-green-500 text-white text-base font-semibold px-6 py-2 rounded shadow-md select-none z-20">
+            <div className="absolute top-2 left-1/2 transform -translate-x-1/2 bg-green-500 text-white text-base animate-bounce font-semibold px-6 py-2 rounded shadow-md select-none z-20">
               Test complete!
             </div>
           )}
